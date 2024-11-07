@@ -1,12 +1,12 @@
 """SQLAlchemy models and utility functions for the database."""
 
+from datetime import datetime
 from typing import Any
 
-from datetime import datetime
-from sqlalchemy import DateTime, ForeignKey, create_engine
-from sqlalchemy.orm import declarative_base, mapped_column, relationship, Mapped, sessionmaker
-
 from config import DATABASE_URL
+from sqlalchemy import DateTime, ForeignKey, create_engine
+from sqlalchemy.orm import (Mapped, declarative_base, mapped_column,
+                            relationship, sessionmaker)
 
 Base = declarative_base()
 

@@ -41,7 +41,22 @@ The API should be accept and return JSON data. Specification (in Python syntax) 
 
 - `GET /posts/{post_id}`:
     - Request: `None`
-    - Good Response: `{ "status": "ok", "post": { ... } }`
+    - Good Response:
+    ```
+    {
+        "status": "ok",
+        "post": {
+            "id": int,
+            "user": {
+                "id": int,
+                "username": str,
+                "display_name": str | None
+            },
+            "content": str,
+            "created_at": str
+        }
+    }
+    ```
     - Error Response: same as above
 
 - `POST /signup`:
