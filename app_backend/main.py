@@ -6,6 +6,7 @@ from database import get_db
 from datamodels import (CreatePostData, DeletePostData, EditPostData,
                         LoginData, SignUpData)
 from fastapi import Depends, FastAPI, Response, status
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
 
@@ -25,6 +26,14 @@ app = FastAPI(
     summary="A simple postboard application.",
     version="0.1.0",
     openapi_tags=tags_metadata,
+)
+
+# TODO: CORS Allowing all for now
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 database.Base.metadata.create_all(bind=database.engine)
