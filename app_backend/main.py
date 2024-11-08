@@ -1,14 +1,18 @@
 """Backend Entry Point"""
 
+from datetime import timedelta
+
+from fastapi import Depends, FastAPI, Response, status
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import RedirectResponse
+from sqlalchemy.orm import Session
+
 import database
 from config import ROOT_REDIRECT
 from database import get_db
 from datamodels import (CreatePostData, DeletePostData, EditPostData,
                         LoginData, SignUpData)
-from fastapi import Depends, FastAPI, Response, status
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import RedirectResponse
-from sqlalchemy.orm import Session
+from tokendb import TokenDB
 
 tags_metadata = [
     {
@@ -38,6 +42,11 @@ app.add_middleware(
 
 database.Base.metadata.create_all(bind=database.engine)
 
+token_db = None
+@app.on_event("startup")
+async def startup_event():
+    global token_db
+    token_db = TokenDB(timedelta(hours=1))
 
 @app.get("/")
 def read_root():
@@ -80,13 +89,13 @@ def sign_up(data: SignUpData, response: Response, db: Session = Depends(get_db))
     new_user = database.User(data.username, data.email, data.display_name)
     db.add(new_user)
     db.commit()
-    # TODO: Token
+    token = token_db.create_token(new_user.id)
     return {
         "status": "ok",
         "user_id": new_user.id,
         "username": new_user.username,
         "display_name": new_user.display_name,
-        "token": "FAKE_TOKEN"
+        "token": token
     }
 
 
@@ -97,26 +106,28 @@ def login(data: LoginData, response: Response, db: Session = Depends(get_db)):
         response.status_code = status.HTTP_401_UNAUTHORIZED
         return {"status": "error", "message": "Invalid credentials"}
     user_email = user.email
-    if user_email == data.email:
-        # TODO: Token
-        return {
-            "status": "ok",
-            "user_id": user.id,
-            "username": user.username,
-            "display_name": user.display_name,
-            "token": "FAKE_TOKEN"
-        }
-    response.status_code = status.HTTP_401_UNAUTHORIZED
-    return {"status": "error", "message": "Invalid credentials"}
+    if user_email != data.email:
+        response.status_code = status.HTTP_401_UNAUTHORIZED
+        return {"status": "error", "message": "Invalid credentials"}
+    token = token_db.create_token(user.id)
+    return {
+        "status": "ok",
+        "user_id": user.id,
+        "username": user.username,
+        "display_name": user.display_name,
+        "token": token
+    }
 
 
 @app.post("/posts", tags=["posts"], status_code=status.HTTP_201_CREATED)
 def create_post(data: CreatePostData, response: Response, db: Session = Depends(get_db)):
-    # TODO: Token
     user = db.query(database.User).filter(database.User.id == data.user_id).first()
     if user is None:
         response.status_code = status.HTTP_401_UNAUTHORIZED
         return {"status": "error", "message": "Invalid credentials"}
+    if not token_db.verify_token(data.token, data.user_id):
+        response.status_code = status.HTTP_401_UNAUTHORIZED
+        return {"status": "error", "message": "Invalid token"}
     post = database.Post(data.user_id, data.content)
     db.add(post)
     db.commit()
@@ -132,22 +143,26 @@ def edit_post(post_id: int, response: Response, data: EditPostData, db: Session 
     if post.user_id != data.user_id:
         response.status_code = status.HTTP_401_UNAUTHORIZED
         return {"status": "error", "message": "Invalid credentials"}
-    # TODO: Token
+    if not token_db.verify_token(data.token, data.user_id):
+        response.status_code = status.HTTP_401_UNAUTHORIZED
+        return {"status": "error", "message": "Invalid token"}
     post.content = data.content
     db.commit()
     return {"status": "ok", "post_id": post_id}
 
 
 @app.delete("/posts/{post_id}", tags=["posts"])
-def delete_post(post_id: int, response: Response, _data: DeletePostData, db: Session = Depends(get_db)):
+def delete_post(post_id: int, response: Response, data: DeletePostData, db: Session = Depends(get_db)):
     post = db.query(database.Post).filter(database.Post.id == post_id).first()
     if post is None:
         response.status_code = status.HTTP_404_NOT_FOUND
         return {"status": "error", "message": "Post not found"}
-    if post.user_id != _data.user_id:
+    if post.user_id != data.user_id:
         response.status_code = status.HTTP_401_UNAUTHORIZED
         return {"status": "error", "message": "Invalid credentials"}
-    # TODO: Token
+    if not token_db.verify_token(data.token, data.user_id):
+        response.status_code = status.HTTP_401_UNAUTHORIZED
+        return {"status": "error", "message": "Invalid token"}
     db.delete(post)
     db.commit()
     return {"status": "ok", "post_id": post_id}
