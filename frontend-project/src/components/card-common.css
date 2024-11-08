@@ -29,6 +29,11 @@
     width: calc(100% - 2em);
 }
 
+.twoside-row {
+    display: flex;
+    justify-content: space-between;
+}
+
 @media (prefers-color-scheme: dark) {
     .post-card {
         background-color: #333;

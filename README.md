@@ -75,12 +75,12 @@ The API should be accept and return JSON data. Specification (in Python syntax) 
     - Error Response: same as above
 
 - `PUT /posts/{post_id}`:
-    - Request: `{ "content": str, "token": str }`
+    - Request: `{ "user_id": int, "content": str, "token": str }`
     - Good Response: `{ "status": "ok", "post_id": int }`
     - Error Response: same as above
 
 - `DELETE /posts/{post_id}`:
-    - Request: `{ "token": str }`
+    - Request: `{ "user_id": int, "token": str }`
     - Good Response: `{ "status": "ok", "post_id": int }`
     - Error Response: same as above
 

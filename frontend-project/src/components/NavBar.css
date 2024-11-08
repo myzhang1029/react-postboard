@@ -24,6 +24,7 @@ nav h1.navbar-main-title {
 
 nav .login-icon {
     margin: auto 1em auto auto;
+    color: white;
     max-width: 10em;
     max-height: 100%;
     height: 80%;

@@ -54,7 +54,7 @@ function LoginFormInner() {
   const { setUser, setToken } = useContext(UserContext);
   return (
     <div className="login-box">
-      <div className="login-box-input-row">
+      <div className="login-box-input-row twoside-row">
         <label htmlFor="login-box-username">Username:&nbsp;</label>
         <input
           type="text"
@@ -64,7 +64,7 @@ function LoginFormInner() {
           onChange={e => setUsername(e.target.value)}
         />
       </div>
-      <div className="login-box-input-row">
+      <div className="login-box-input-row twoside-row">
         <label htmlFor="login-box-email">Email:&nbsp;</label>
         <input
           type="email"
@@ -75,7 +75,7 @@ function LoginFormInner() {
         />
       </div>
       {isSignup && (
-        <div className="login-box-input-row">
+        <div className="login-box-input-row twoside-row">
           <label htmlFor="login-box-display-name">Display Name:&nbsp;</label>
           <input
             type="text"
@@ -89,7 +89,7 @@ function LoginFormInner() {
       <div className="login-box-message-row">
         <div id="login-box-message" className="message-div">{message}</div>
       </div>
-      <div className="login-box-input-row">
+      <div className="login-box-input-row twoside-row">
         <button onClick={() => loginOrSignup(
           username,
           email,

@@ -20,9 +20,11 @@ class CreatePostData(BaseModel):
 
 
 class EditPostData(BaseModel):
+    user_id: int
     content: str
     token: str
 
 
 class DeletePostData(BaseModel):
+    user_id: int
     token: str

@@ -129,6 +129,9 @@ def edit_post(post_id: int, response: Response, data: EditPostData, db: Session 
     if post is None:
         response.status_code = status.HTTP_404_NOT_FOUND
         return {"status": "error", "message": "Post not found"}
+    if post.user_id != data.user_id:
+        response.status_code = status.HTTP_401_UNAUTHORIZED
+        return {"status": "error", "message": "Invalid credentials"}
     # TODO: Token
     post.content = data.content
     db.commit()
@@ -141,6 +144,9 @@ def delete_post(post_id: int, response: Response, _data: DeletePostData, db: Ses
     if post is None:
         response.status_code = status.HTTP_404_NOT_FOUND
         return {"status": "error", "message": "Post not found"}
+    if post.user_id != _data.user_id:
+        response.status_code = status.HTTP_401_UNAUTHORIZED
+        return {"status": "error", "message": "Invalid credentials"}
     # TODO: Token
     db.delete(post)
     db.commit()
