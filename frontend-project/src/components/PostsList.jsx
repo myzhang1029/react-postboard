@@ -15,11 +15,13 @@ function PostsList() {
         <div className="posts-list-container">
             <div className="posts-list-header">
                 <h2>Posts</h2>
-                <button onClick={() => {
-                    setIsVisible(true);
-                    setPostToUpdate(null);
-                }
-                }>Write a post</button>
+                <div className="posts-list-buttons twoside-row">
+                    <button onClick={() => {
+                        setIsVisible(true);
+                        setPostToUpdate(null);
+                    }}>Write a post</button>
+                    <button onClick={() => reloadPosts(setPosts)}>Reload</button>
+                </div>
             </div>
             <div className="posts-list">
                 {
