@@ -45,9 +45,16 @@ function WritePostBox() {
 
     if (!user || !user.token) {
         return (
-            <div className="write-post-box post-card">
-                <h3>Log in to write a post</h3>
-            </div>
+            <>
+                <div className="write-post-box-mask"></div>
+                <div className="write-post-box post-card">
+                    <h3>Log in to write a post</h3>
+                    <p>Click the login button at the top right corner to log in or sign up</p>
+                    <div className="write-post-box-actions-row">
+                        <button onClick={() => setIsVisible(false)}>Got it!</button>
+                    </div>
+                </div>
+            </>
         );
     }
     return (
@@ -60,8 +67,8 @@ function WritePostBox() {
                     <div id="write-post-box-message" className="message-div">{message}</div>
                 </div>
                 <div className="write-post-box-actions-row  twoside-row">
-                    <button onClick={() => postPost(post, user, postToUpdate ? postToUpdate.id : null, setMessage, setIsVisible, setPosts)}>Post</button>
                     <button onClick={() => setIsVisible(false)}>Cancel</button>
+                    <button onClick={() => postPost(post, user, postToUpdate ? postToUpdate.id : null, setMessage, setIsVisible, setPosts)}>Post</button>
                 </div>
             </div>
         </>

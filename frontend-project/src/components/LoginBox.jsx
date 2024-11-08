@@ -49,7 +49,7 @@ function LoginFormInner() {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [displayName, setDisplayName] = useState('');
-  const [isSignup, setIsSignup] = useState(false);
+  const [isSignup, setIsSignup] = useState(true);
   const [message, setMessage] = useState('');
   const { setUser, setToken } = useContext(UserContext);
   return (
