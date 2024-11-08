@@ -81,7 +81,13 @@ def sign_up(data: SignUpData, response: Response, db: Session = Depends(get_db))
     db.add(new_user)
     db.commit()
     # TODO: Token
-    return {"status": "ok", "user_id": new_user.id, "username": new_user.username, "token": "FAKE_TOKEN"}
+    return {
+        "status": "ok",
+        "user_id": new_user.id,
+        "username": new_user.username,
+        "display_name": new_user.display_name,
+        "token": "FAKE_TOKEN"
+    }
 
 
 @app.post("/login", tags=["users"])
@@ -93,7 +99,13 @@ def login(data: LoginData, response: Response, db: Session = Depends(get_db)):
     user_email = user.email
     if user_email == data.email:
         # TODO: Token
-        return {"status": "ok", "user_id": user.id, "username": user.username, "token": "FAKE_TOKEN"}
+        return {
+            "status": "ok",
+            "user_id": user.id,
+            "username": user.username,
+            "display_name": user.display_name,
+            "token": "FAKE_TOKEN"
+        }
     response.status_code = status.HTTP_401_UNAUTHORIZED
     return {"status": "error", "message": "Invalid credentials"}
 

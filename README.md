@@ -61,12 +61,12 @@ The API should be accept and return JSON data. Specification (in Python syntax) 
 
 - `POST /signup`:
     - Request: `{ "username": str, "email": str, "display_name": str | None }`
-    - Good Response: `{ "status": "ok", "user_id": int, "username": str, "token": str }`
+    - Good Response: `{ "status": "ok", "user_id": int, "username": str, "display_name": str | None, "token": str }`
     - Error Response: same as above
 
 - `POST /login`:
     - Request: `{ "username": str, "email": str }`
-    - Good Response: `{ "status": "ok", "user_id": int, "username": str, "token": str }`
+    - Good Response: `{ "status": "ok", "user_id": int, "username": str, "display_name": str | None, "token": str }`
     - Error Response: same as above
 
 - `POST /posts`:

@@ -1,12 +1,19 @@
+import { useContext, useState } from 'react';
+
 import './WritePostBox.css';
 import './card-common.css';
 import API_ENDPOINT from "../config.js";
+import { UserContext } from '../contexts.js';
 
-async function postPost(content) {
+async function postPost(content, user, setMessage) {
+    if (content === '') {
+        setMessage('Content cannot be empty');
+        return;
+    }
     const post_data = {
         content,
-        user_id: 1, // TODO: Get the user ID from the session
-        token: 'TODO: Get the token from the session',
+        user_id: user.id,
+        token: user.token,
     };
     const response = await fetch(`${API_ENDPOINT}/posts`, {
         method: 'POST',
@@ -15,34 +22,35 @@ async function postPost(content) {
         },
         body: JSON.stringify(post_data),
     });
-    return await response.json();
-}
-
-function readFormPost() {
-    const content = document.getElementById('write-post-content').value;
-    if (content === '') {
-        document.getElementById('write-post-box-message').innerText = 'Content cannot be empty';
+    const responseJson = await response.json();
+    console.log(responseJson);
+    if (!responseJson.status || responseJson.status !== 'ok') {
+        setMessage('Failed: ' + JSON.stringify(responseJson));
         return;
     }
-    postPost(content)
-        .then(post => {
-            console.log(post);
-            if (!post.status || post.status !== 'ok') {
-                document.getElementById('write-post-box-message').innerText = 'Failed: ' + post;
-                return;
-            }
-        });
+    setMessage('');
 }
 
 function WritePostBox() {
+    const { user } = useContext(UserContext);
+    const [post, setPost] = useState('');
+    const [message, setMessage] = useState('');
+
+    if (!user || !user.token) {
+        return (
+            <div className="write-post-box post-card">
+                <h3>Log in to write a post</h3>
+            </div>
+        );
+    }
     return (
         <div className="write-post-box post-card">
             <h3>Write a Post...</h3>
-            <textarea id="write-post-content" rows="4" cols="50" className="post-card-content"></textarea>
+            <textarea id="write-post-content" rows="4" cols="50" className="post-card-content" value={post} onChange={e => setPost(e.target.value)}></textarea>
             <div className="write-post-box-message-row">
-                <div id="write-post-box-message"></div>
+                <div id="write-post-box-message" className="message-div"></div>
             </div>
-            <button onClick={readFormPost}>Post</button>
+            <button onClick={() => postPost(post, user, setMessage)}>Post</button>
         </div>
     );
 }

@@ -4,13 +4,6 @@ import PostCard from "./PostCard.jsx";
 import API_ENDPOINT from "../config.js";
 
 function PostsList() {
-    // posts: {
-    //     id: number,
-    //     content: string,
-    //     user: number,
-    //     user_display_name: string,
-    //     created_at: date,
-    // }
     const [posts, setPosts] = useState([]);
     useEffect(() => {
         fetch(`${API_ENDPOINT}/posts`)
