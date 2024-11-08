@@ -1,0 +1,40 @@
+@media (max-width: 768px) {
+    .post-card {
+        width: 100%;
+    }
+}
+
+@media (min-width: 768px) {
+    .post-card {
+        width: 500px;
+    }
+}
+
+.post-card {
+    padding: 1em;
+    margin: 0.5em auto;
+    border: 1px solid #333;
+    border-radius: 10px;
+    background-color: #f0f8ff;
+}
+
+.post-card-content {
+    margin: 2em 0.5em;
+    padding: 0.5em;
+    border: 1px dashed #333;
+    border-radius: 5px;
+    background-color: #fff;
+    text-align: left;
+    word-wrap: break-word;
+    width: calc(100% - 2em);
+}
+
+@media (prefers-color-scheme: dark) {
+    .post-card {
+        background-color: #333;
+    }
+
+    .post-card-content {
+        background-color: #444;
+    }
+}

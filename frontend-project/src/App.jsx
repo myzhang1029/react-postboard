@@ -1,13 +1,16 @@
-import './App.css'
-import PostsList from './PostsList.jsx'
+import './App.css';
+import PostsList from './components/PostsList.jsx';
+import NavBar from './components/NavBar.jsx';
+import WritePostBox from './components/WritePostBox.jsx';
 
 function App() {
   return (
     <>
-      <h1>React Post Board</h1>
+      <NavBar title="React Post Board" />
+      <WritePostBox />
       <PostsList />
     </>
-  )
+  );
 }
 
-export default App
+export default App;
