@@ -14,6 +14,7 @@ function displayDate(date) {
 function editPost(id, content, setIsVisible, setPostToUpdate) {
     setPostToUpdate({ id, content });
     setIsVisible(true);
+    console.log('Edit post: ' + id);
 }
 
 function deletePost(id, user, setPosts) {

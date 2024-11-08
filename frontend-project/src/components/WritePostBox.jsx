@@ -38,23 +38,17 @@ async function postPost(content, user, postIdtoUpdate, setMessage, setIsVisible,
 
 function WritePostBox() {
     const { user } = useContext(UserContext);
-    const { isVisible, setIsVisible, postToUpdate } = useContext(PostEditorContext);
+    const { setIsVisible, postToUpdate } = useContext(PostEditorContext);
     const { setPosts } = useContext(PostContext);
-    const [post, setPost] = useState('');
+    const [post, setPost] = useState(postToUpdate ? postToUpdate.content : '');
     const [message, setMessage] = useState('');
 
-    if (!isVisible) {
-        return null;
-    }
     if (!user || !user.token) {
         return (
             <div className="write-post-box post-card">
                 <h3>Log in to write a post</h3>
             </div>
         );
-    }
-    if (postToUpdate) {
-        setPost(postToUpdate.content);
     }
     return (
         <>

@@ -16,7 +16,7 @@ function App() {
       <PostContext.Provider value={{ posts, setPosts }}>
         <PostEditorContext.Provider value={{ isVisible, setIsVisible, postToUpdate, setPostToUpdate }}>
           <NavBar title="React Post Board" />
-          <WritePostBox />
+          { isVisible && <WritePostBox /> }
           <PostsList />
         </PostEditorContext.Provider>
       </PostContext.Provider>

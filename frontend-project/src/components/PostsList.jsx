@@ -9,6 +9,7 @@ function PostsList() {
 
     useEffect(() => {
         reloadPosts(setPosts);
+        console.log('PostsList: useEffect');
     }, []);
     return (
         <div className="posts-list-container">
@@ -32,6 +33,7 @@ function PostsList() {
                                 uid={post.user}
                                 user={post.user_display_name}
                                 created_at={post.created_at}
+                                key={post.id}
                             />
                         ))
                 }
