@@ -30,6 +30,7 @@ class TokenDB:
         if self._data[token]["user_id"] != user_id:
             return False
         if datetime.now() - self._data[token]["created_at"] > self.token_lifetime:
+            self.delete_token(token)
             return False
         return True
 
