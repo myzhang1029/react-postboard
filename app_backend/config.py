@@ -1,4 +1,10 @@
 """Configuration parameters."""
 
-ROOT_REDIRECT = "https://www.google.com"
-DATABASE_URL = "sqlite:////Users/zmy/Git/jelper-interview/app.db"
+import os
+
+DATABASE_URL = os.getenv("DATABASE_URL")
+if not DATABASE_URL:
+    raise ValueError("DATABASE_URL is not set")
+
+
+ROOT_REDIRECT = "https://maiyun.me"

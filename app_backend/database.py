@@ -1,10 +1,9 @@
 """SQLAlchemy models and utility functions for the database."""
 
 from datetime import datetime
-from typing import Any
 
 from config import DATABASE_URL
-from sqlalchemy import DateTime, ForeignKey, create_engine
+from sqlalchemy import DateTime, ForeignKey, String, Text, create_engine
 from sqlalchemy.orm import (Mapped, declarative_base, mapped_column,
                             relationship, sessionmaker)
 
@@ -16,9 +15,9 @@ class User(Base):
     __tablename__ = "users"
 
     id: Mapped[int] = mapped_column("id", primary_key=True)
-    username: Mapped[str] = mapped_column("username", nullable=False, unique=True)
-    display_name: Mapped[str] = mapped_column("display_name", nullable=True)
-    email: Mapped[str] = mapped_column("email", nullable=False)
+    username: Mapped[str] = mapped_column("username", String(128), nullable=False, unique=True)
+    display_name: Mapped[str] = mapped_column("display_name", String(128), nullable=True)
+    email: Mapped[str] = mapped_column("email", String(128), nullable=False)
     created_at: Mapped[datetime] = mapped_column(
         "created_at", DateTime, nullable=False)
     posts: Mapped[list["Post"]] = relationship(back_populates="user")
@@ -40,7 +39,7 @@ class Post(Base):
     id: Mapped[int] = mapped_column("id", primary_key=True)
     user_id: Mapped[int] = mapped_column(
         ForeignKey("users.id"), nullable=False)
-    content: Mapped[str] = mapped_column("content")
+    content: Mapped[str] = mapped_column("content", Text, nullable=False)
     created_at: Mapped[datetime] = mapped_column(
         "created_at", DateTime, nullable=False)
     user: Mapped[User] = relationship("User", back_populates="posts")
@@ -55,7 +54,7 @@ class Post(Base):
 
 
 engine = create_engine(
-    DATABASE_URL, echo=True, connect_args={"check_same_thread": False}
+    DATABASE_URL, echo=True, #connect_args={"check_same_thread": False}
 )
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
