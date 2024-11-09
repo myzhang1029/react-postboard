@@ -8,10 +8,9 @@ from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
 
 import database
+import datamodels
 from config import ROOT_REDIRECT
 from database import get_db
-from datamodels import (CreatePostData, DeletePostData, EditPostData,
-                        LoginData, SignUpData)
 from tokendb import TokenDB
 
 tags_metadata = [
@@ -81,7 +80,7 @@ def read_post(post_id: int, response: Response, db: Session = Depends(get_db)):
 
 
 @app.post("/signup", tags=["users"], status_code=status.HTTP_201_CREATED)
-def sign_up(data: SignUpData, response: Response, db: Session = Depends(get_db)):
+def sign_up(data: datamodels.SignUpData, response: Response, db: Session = Depends(get_db)):
     old_user = db.query(database.User).filter(database.User.username == data.username).first()
     if old_user is not None:
         response.status_code = status.HTTP_409_CONFLICT
@@ -100,7 +99,7 @@ def sign_up(data: SignUpData, response: Response, db: Session = Depends(get_db))
 
 
 @app.post("/login", tags=["users"])
-def login(data: LoginData, response: Response, db: Session = Depends(get_db)):
+def login(data: datamodels.LoginData, response: Response, db: Session = Depends(get_db)):
     user = db.query(database.User).filter(database.User.username == data.username).first()
     if user is None:
         response.status_code = status.HTTP_401_UNAUTHORIZED
@@ -118,9 +117,17 @@ def login(data: LoginData, response: Response, db: Session = Depends(get_db)):
         "token": token
     }
 
+@app.post("/logout", tags=["users"])
+def logout(data: datamodels.LogoutData, response: Response):
+    if not token_db.verify_token(data.token, data.user_id):
+        response.status_code = status.HTTP_401_UNAUTHORIZED
+        return {"status": "error", "message": "Invalid token"}
+    token_db.delete_token(data.user_id)
+    return {"status": "ok"}
+
 
 @app.post("/posts", tags=["posts"], status_code=status.HTTP_201_CREATED)
-def create_post(data: CreatePostData, response: Response, db: Session = Depends(get_db)):
+def create_post(data: datamodels.CreatePostData, response: Response, db: Session = Depends(get_db)):
     user = db.query(database.User).filter(database.User.id == data.user_id).first()
     if user is None:
         response.status_code = status.HTTP_401_UNAUTHORIZED
@@ -135,7 +142,7 @@ def create_post(data: CreatePostData, response: Response, db: Session = Depends(
 
 
 @app.put("/posts/{post_id}", tags=["posts"])
-def edit_post(post_id: int, response: Response, data: EditPostData, db: Session = Depends(get_db)):
+def edit_post(post_id: int, response: Response, data: datamodels.EditPostData, db: Session = Depends(get_db)):
     post = db.query(database.Post).filter(database.Post.id == post_id).first()
     if post is None:
         response.status_code = status.HTTP_404_NOT_FOUND
@@ -152,7 +159,7 @@ def edit_post(post_id: int, response: Response, data: EditPostData, db: Session 
 
 
 @app.delete("/posts/{post_id}", tags=["posts"])
-def delete_post(post_id: int, response: Response, data: DeletePostData, db: Session = Depends(get_db)):
+def delete_post(post_id: int, response: Response, data: datamodels.DeletePostData, db: Session = Depends(get_db)):
     post = db.query(database.Post).filter(database.Post.id == post_id).first()
     if post is None:
         response.status_code = status.HTTP_404_NOT_FOUND

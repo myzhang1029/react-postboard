@@ -69,6 +69,11 @@ The API should be accept and return JSON data. Specification (in Python syntax) 
     - Good Response: `{ "status": "ok", "user_id": int, "username": str, "display_name": str | None, "token": str }`
     - Error Response: same as above
 
+- `POST /logout`:
+    - Request: `{ "user_id": int, "token": str }`
+    - Good Response: `{ "status": "ok" }`
+    - Error Response: same as above
+
 - `POST /posts`:
     - Request: `{ "user_id": int, "content": str, "token": str }`
     - Good Response: `{ "status": "ok", "post_id": int }`

@@ -13,6 +13,11 @@ class LoginData(BaseModel):
     email: str
 
 
+class LogoutData(BaseModel):
+    user_id: int
+    token: str
+
+
 class CreatePostData(BaseModel):
     user_id: int
     content: str

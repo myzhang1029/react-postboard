@@ -2,7 +2,7 @@ import { useContext, useState } from 'react';
 
 import './LoginBox.css';
 import { UserContext } from '../contexts.js';
-import { apiLoginOrSignup } from '../apiInterface.js';
+import { apiLoginOrSignup, apiLogout } from '../apiInterface.js';
 import { setLoginDetails } from '../localStorage.js';
 
 /// Form action function to handle login or signup
@@ -98,6 +98,7 @@ function LoginBox() {
             <button onClick={() => {
               setUser(null);
               setLoginDetails(null);
+              apiLogout(user);
             }}>Log out</button>
           </div>
         </div>

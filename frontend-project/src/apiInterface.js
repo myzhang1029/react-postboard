@@ -32,6 +32,21 @@ async function apiLoginOrSignup(username, email, display_name, isSignup) {
 
 
 /**
+ * Logout using the API.
+ *
+ * @param {object} user
+ */
+async function apiLogout(user) {
+    const response = await fetch(`${API_ENDPOINT}/logout`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ user_id: user.id, token: user.token }),
+    });
+}
+
+/**
  * Fetch the posts from the API.
  *
  * @returns {object[]} The posts in the format { id, content, user, user_display_name, created_at }.
@@ -66,7 +81,7 @@ async function apiReloadPosts() {
  * Post a new post or update an existing post.
  *
  * @param {string} content
- * @param {string} user
+ * @param {object} user
  * @param {number} postIdtoUpdate
  * @returns {object} The response data (see the API documentation).
  */
@@ -92,12 +107,12 @@ async function apiPostPost(content, user, postIdtoUpdate) {
 /**
  * Delete a post.
  *
- * @param {number} id
+ * @param {number} post_id
  * @param {number} user
  * @returns {object} The response data (see the API documentation).
  */
-async function apiDeletePost(id, user) {
-    const response = await fetch(`${API_ENDPOINT}/posts/${id}`, {
+async function apiDeletePost(post_id, user) {
+    const response = await fetch(`${API_ENDPOINT}/posts/${post_id}`, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',
@@ -107,4 +122,4 @@ async function apiDeletePost(id, user) {
     return await response.json();
 }
 
-export { apiLoginOrSignup, apiReloadPosts, apiPostPost, apiDeletePost };
+export { apiLoginOrSignup, apiLogout, apiReloadPosts, apiPostPost, apiDeletePost };
