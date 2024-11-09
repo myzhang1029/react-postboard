@@ -2,38 +2,24 @@ import { useContext, useState } from 'react';
 
 import './WritePostBox.css';
 import './card-common.css';
-import API_ENDPOINT from "../config.js";
-import { UserContext, PostContext, PostEditorContext, reloadPosts } from '../contexts.js';
+import { UserContext, PostContext, PostEditorContext } from '../contexts.js';
+import { apiPostPost, apiReloadPosts } from '../apiInterface.js';
 
-async function postPost(content, user, postIdtoUpdate, setMessage, setIsVisible, setPosts) {
+function postPost(content, user, postIdtoUpdate, setMessage, setIsVisible, setPosts) {
     if (content === '') {
         setMessage('Content cannot be empty');
-        return;
     }
-    const form_data = {
-        content,
-        user_id: user.id,
-        token: user.token,
-    };
-    const url = postIdtoUpdate ? `${API_ENDPOINT}/posts/${postIdtoUpdate}` : `${API_ENDPOINT}/posts`;
-    const method = postIdtoUpdate ? 'PUT' : 'POST';
-    const response = await fetch(url, {
-        method,
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(form_data),
-    });
-    const responseJson = await response.json();
-    console.log(responseJson);
-    if (!responseJson.status || responseJson.status !== 'ok') {
-        setMessage('Failed: ' + JSON.stringify(responseJson));
-        return;
-    }
-    setMessage('');
-    setIsVisible(false);
-    // Update the post list with the new post
-    reloadPosts(setPosts);
+    apiPostPost(content, user, postIdtoUpdate, setPosts)
+        .then(responseJson => {
+            console.log(responseJson);
+            if (!responseJson.status || responseJson.status !== 'ok') {
+                setMessage('Failed: ' + JSON.stringify(responseJson));
+            }
+            // Update the post list with the new post
+            apiReloadPosts().then(posts => setPosts(posts));
+            setIsVisible(false);
+            setMessage('');
+        });
 }
 
 function WritePostBox() {

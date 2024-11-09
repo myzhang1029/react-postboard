@@ -1,7 +1,12 @@
 import { useContext, useEffect } from 'react';
 
 import PostCard from "./PostCard.jsx";
-import { PostContext, PostEditorContext, reloadPosts } from '../contexts.js';
+import { PostContext, PostEditorContext } from '../contexts.js';
+import { apiReloadPosts } from '../apiInterface.js';
+
+function reloadPosts(setPosts) {
+    apiReloadPosts().then(posts => setPosts(posts));
+}
 
 function PostsList() {
     const { posts, setPosts } = useContext(PostContext);

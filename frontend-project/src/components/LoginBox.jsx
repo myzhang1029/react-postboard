@@ -1,36 +1,17 @@
 import { useContext, useState } from 'react';
 
 import './LoginBox.css';
-import API_ENDPOINT from '../config.js';
 import { UserContext } from '../contexts.js';
+import { apiLoginOrSignup } from '../apiInterface.js';
 
-/// Actually use the login/signup API and return the JSON response
-async function loginOrSignupInner(username, email, display_name, isSignup) {
-  const data = {
-    username,
-    email,
-  };
-  if (isSignup) {
-    data.display_name = display_name === '' ? null : display_name;
-  }
-  const url = isSignup ? `${API_ENDPOINT}/signup` : `${API_ENDPOINT}/login`;
-  const response = await fetch(url, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(data),
-  });
-  return await response.json();
-}
 
 /// Form action function to handle login or signup
-async function loginOrSignup(username, email, display_name, isSignup, setMessage, setUser, setToken) {
+async function loginOrSignup(username, email, display_name, isSignup, setMessage, setUser) {
   if (username === '' || email === '') {
     setMessage('Username and email cannot be empty');
     return;
   }
-  const response_data = await loginOrSignupInner(username, email, display_name, isSignup);
+  const response_data = await apiLoginOrSignup(username, email, display_name, isSignup);
   if (!response_data.status || response_data.status !== 'ok') {
     setMessage('Failed: ' + JSON.stringify(response_data));
     return;
@@ -51,7 +32,7 @@ function LoginFormInner() {
   const [displayName, setDisplayName] = useState('');
   const [isSignup, setIsSignup] = useState(true);
   const [message, setMessage] = useState('');
-  const { setUser, setToken } = useContext(UserContext);
+  const { setUser } = useContext(UserContext);
   return (
     <div className="login-box">
       <div className="login-box-input-row twoside-row">
@@ -96,8 +77,7 @@ function LoginFormInner() {
           displayName,
           isSignup,
           setMessage,
-          setUser,
-          setToken
+          setUser
         )}>Submit</button>
         <button onClick={() => setIsSignup(!isSignup)}>{isSignup ? 'Log In' : 'Sign Up'} instead</button>
       </div>

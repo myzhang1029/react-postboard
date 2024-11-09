@@ -4,8 +4,8 @@ import { FaEdit, FaTrash } from "react-icons/fa";
 
 import './PostCard.css';
 import './card-common.css';
-import { UserContext, PostContext, PostEditorContext, reloadPosts } from '../contexts.js';
-import API_ENDPOINT from '../config.js';
+import { UserContext, PostContext, PostEditorContext } from '../contexts.js';
+import { apiDeletePost, apiReloadPosts } from '../apiInterface.js';
 
 function displayDate(date) {
     return date.toLocaleString({ weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
@@ -18,23 +18,15 @@ function editPost(id, content, setIsVisible, setPostToUpdate) {
 }
 
 function deletePost(id, user, setPosts) {
-    fetch(`${API_ENDPOINT}/posts/${id}`, {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ user_id: user.id, token: user.token }),
-    })
-        .then(response => response.json())
+    apiDeletePost(id, user)
         .then(responseJson => {
             if (!responseJson.status || responseJson.status !== 'ok') {
                 console.error('Failed: ' + JSON.stringify(responseJson));
                 return;
             }
-            reloadPosts(setPosts);
+            apiReloadPosts().then(posts => setPosts(posts));
         });
 }
-
 
 function PostCard({ pid, uid, user: postUser, content, created_at }) {
     const { user } = useContext(UserContext);
