@@ -1,6 +1,6 @@
 @media (max-width: 768px) {
     .post-card {
-        width: 100%;
+        width: calc(100% - 2em);
     }
 }
 
