@@ -3,7 +3,7 @@ import { useContext, useState } from 'react';
 import './LoginBox.css';
 import { UserContext } from '../contexts.js';
 import { apiLoginOrSignup } from '../apiInterface.js';
-
+import { setLoginDetails } from '../localStorage.js';
 
 /// Form action function to handle login or signup
 async function loginOrSignup(username, email, display_name, isSignup, setMessage, setUser) {
@@ -16,13 +16,15 @@ async function loginOrSignup(username, email, display_name, isSignup, setMessage
     setMessage('Failed: ' + JSON.stringify(response_data));
     return;
   }
-  console.log(response_data);
-  setUser({
+  const user = {
     id: response_data.user_id,
     username: response_data.username,
     display_name: response_data.display_name,
     token: response_data.token,
-  });
+  };
+  console.log(response_data);
+  setUser(user);
+  setLoginDetails(user);
   setMessage('');
 }
 
@@ -86,11 +88,19 @@ function LoginFormInner() {
 }
 
 function LoginBox() {
-  const { user } = useContext(UserContext);
+  const { user, setUser } = useContext(UserContext);
   if (user && user.id && user.username && user.display_name && user.token) {
     return (
       <div className="login-box">
         <div className="login-box-title">Logged in as {user.display_name || user.username}</div>
+        <div className="login-box-message-row">
+          <div className="login-box-input-row">
+            <button onClick={() => {
+              setUser(null);
+              setLoginDetails(null);
+            }}>Log out</button>
+          </div>
+        </div>
       </div>
     );
   }

@@ -2,7 +2,15 @@
 import API_ENDPOINT from './config.js';
 
 
-/// Actually use the login/signup API and return the JSON response
+/**
+ * Login or signup using the API.
+ *
+ * @param {string} username
+ * @param {string} email
+ * @param {string} display_name
+ * @param {boolean} isSignup
+ * @returns {object} The response data (see the API documentation).
+ */
 async function apiLoginOrSignup(username, email, display_name, isSignup) {
     const data = {
       username,
@@ -23,6 +31,11 @@ async function apiLoginOrSignup(username, email, display_name, isSignup) {
 }
 
 
+/**
+ * Fetch the posts from the API.
+ *
+ * @returns {object[]} The posts in the format { id, content, user, user_display_name, created_at }.
+ */
 async function apiReloadPosts() {
     const response = await fetch(`${API_ENDPOINT}/posts`);
     const posts = response.json()
@@ -49,6 +62,14 @@ async function apiReloadPosts() {
 }
 
 
+/**
+ * Post a new post or update an existing post.
+ *
+ * @param {string} content
+ * @param {string} user
+ * @param {number} postIdtoUpdate
+ * @returns {object} The response data (see the API documentation).
+ */
 async function apiPostPost(content, user, postIdtoUpdate) {
     const form_data = {
         content,
@@ -68,6 +89,13 @@ async function apiPostPost(content, user, postIdtoUpdate) {
 }
 
 
+/**
+ * Delete a post.
+ *
+ * @param {number} id
+ * @param {number} user
+ * @returns {object} The response data (see the API documentation).
+ */
 async function apiDeletePost(id, user) {
     const response = await fetch(`${API_ENDPOINT}/posts/${id}`, {
         method: 'DELETE',

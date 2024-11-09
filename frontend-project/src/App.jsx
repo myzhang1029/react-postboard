@@ -5,12 +5,15 @@ import PostsList from './components/PostsList.jsx';
 import NavBar from './components/NavBar.jsx';
 import WritePostBox from './components/WritePostBox.jsx';
 import { UserContext, PostContext, PostEditorContext } from './contexts.js';
+import { getLoginDetails } from './localStorage.js';
 
 function App() {
-  const [user, setUser] = useState({});
   const [posts, setPosts] = useState([]);
   const [isVisible, setIsVisible] = useState(false);
   const [postToUpdate, setPostToUpdate] = useState(null);
+  const storedUser = getLoginDetails();
+  const [user, setUser] = useState(storedUser);
+
   return (
     <UserContext.Provider value={{ user, setUser }}>
       <PostContext.Provider value={{ posts, setPosts }}>
