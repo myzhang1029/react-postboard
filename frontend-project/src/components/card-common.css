@@ -1,32 +1,39 @@
+:root {
+    --card-bg-light: #fff;
+    --card-bg-dark: #333;
+    --message-color: #f00;
+    --border-color: #d1d9e0;
+    --separator-color: #ddd;
+    --card-sel-selected-light: #213547;
+    --card-sel-not-selected-light: graytext;
+    --card-sel-selected-dark: rgba(255, 255, 255, 0.87);
+    --card-sel-not-selected-dark: graytext;
+}
+
 @media (max-width: 768px) {
-    .post-card {
+    .main-card {
         width: calc(100% - 2em);
     }
 }
 
 @media (min-width: 768px) {
-    .post-card {
+    .main-card {
         width: 500px;
     }
 }
 
-.post-card {
+.main-card {
     padding: 1em;
     margin: 0.5em auto;
-    border: 1px solid #333;
-    border-radius: 10px;
-    background-color: #f0f8ff;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background-color: var(--card-bg-light);
 }
 
-.post-card-content {
-    margin: 2em 0.5em;
-    padding: 0.5em;
-    border: 1px dashed #333;
-    border-radius: 5px;
-    background-color: #fff;
-    text-align: left;
-    word-wrap: break-word;
+.box-separator {
+    border-bottom: 1px solid var(--separator-color);
     width: calc(100% - 2em);
+    margin: 1em auto;
 }
 
 .twoside-row {
@@ -34,12 +41,50 @@
     justify-content: space-between;
 }
 
-@media (prefers-color-scheme: dark) {
-    .post-card {
-        background-color: #333;
-    }
+.flowright-row {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+}
 
-    .post-card-content {
-        background-color: #444;
+@media (prefers-color-scheme: dark) {
+    .main-card {
+        background-color: var(--card-bg-dark);
     }
+}
+
+.select-two-panel-buttons button {
+    width: 50%;
+    background-color: #ddd;
+    border-style: outset;
+    color: var(--card-sel-not-selected-light);
+}
+
+.select-two-panel-buttons button[disabled] {
+    background-color: var(--card-bg-light);
+    color: var(--card-sel-selected-light);
+    border-style: inset;
+}
+
+@media (prefers-color-scheme: dark) {
+    .select-two-panel-buttons button {
+        background-color: #444;
+        color: var(--card-sel-not-selected-dark);
+    }
+    .select-two-panel-buttons button[disabled] {
+        background-color: var(--card-bg-dark);
+        color: var(--card-sel-selected-dark);
+    }
+}
+
+.select-two-panel-buttons :nth-child(1) {
+    border-radius: 8px 0 0 0;
+    border-width: 0;
+}
+
+.select-two-panel-buttons :nth-child(2) {
+    border-radius: 0 8px 0 0;
+    border-width: 0;
+    border-left-width: 1px;
+    border-color: var(--border-color);
 }

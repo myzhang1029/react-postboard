@@ -19,7 +19,6 @@ function PostsList() {
     return (
         <div className="posts-list-container">
             <div className="posts-list-header">
-                <h2>Posts</h2>
                 <div className="posts-list-buttons twoside-row">
                     <button onClick={() => {
                         setIsVisible(true);
@@ -27,6 +26,7 @@ function PostsList() {
                     }}>Write a post</button>
                     <button onClick={() => reloadPosts(setPosts)}>Reload</button>
                 </div>
+                <h2>Posts</h2>
             </div>
             <div className="posts-list">
                 {

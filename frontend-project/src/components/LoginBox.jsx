@@ -37,6 +37,10 @@ function LoginFormInner() {
   const { setUser } = useContext(UserContext);
   return (
     <div className="login-box">
+      <div className="login-box-type-select-row select-two-panel-buttons">
+        <button onClick={() => setIsSignup(true)} disabled={isSignup}>Sign Up</button>
+        <button onClick={() => setIsSignup(false)} disabled={!isSignup}>Log In</button>
+      </div>
       <div className="login-box-input-row twoside-row">
         <label htmlFor="login-box-username">Username:&nbsp;</label>
         <input
@@ -72,7 +76,8 @@ function LoginFormInner() {
       <div className="login-box-message-row">
         <div id="login-box-message" className="message-div">{message}</div>
       </div>
-      <div className="login-box-input-row twoside-row">
+      <div className="box-separator"></div>
+      <div className="login-box-input-row flowright-row">
         <button onClick={() => loginOrSignup(
           username,
           email,
@@ -81,7 +86,6 @@ function LoginFormInner() {
           setMessage,
           setUser
         )}>Submit</button>
-        <button onClick={() => setIsSignup(!isSignup)}>{isSignup ? 'Log In' : 'Sign Up'} instead</button>
       </div>
     </div>
   );

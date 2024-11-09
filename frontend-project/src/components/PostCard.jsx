@@ -33,18 +33,20 @@ function PostCard({ pid, uid, user: postUser, content, created_at }) {
     const { setPosts } = useContext(PostContext);
     const { setIsVisible, setPostToUpdate } = useContext(PostEditorContext);
     return (
-        <div className="post-card" key={pid}>
-            <div className="post-card-info-row">
-                <div className="post-card-user">{postUser}</div>
-                <div className="post-card-created-at">{displayDate(created_at)}</div>
+        <div className="post-card main-card" key={pid}>
+            <div className="twoside-row">
+                <div className="post-card-info-row">
+                    <div className="post-card-user">{postUser}</div>
+                    <div className="post-card-created-at">{displayDate(created_at)}</div>
+                </div>
+                { (user && user.id === uid) && (
+                    <div className="post-card-actions-row">
+                        <button onClick={() => editPost(pid, content, setIsVisible, setPostToUpdate)}><FaEdit /></button>
+                        <button onClick={() => deletePost(pid, user, setPosts)}><FaTrash /></button>
+                    </div>
+                )}
             </div>
             <div className="post-card-content"><Markdown>{content}</Markdown></div>
-            { (user && user.id === uid) && (
-                <div className="post-card-actions-row  twoside-row">
-                    <button onClick={() => editPost(pid, content, setIsVisible, setPostToUpdate)}><FaEdit /></button>
-                    <button onClick={() => deletePost(pid, user, setPosts)}><FaTrash /></button>
-                </div>
-            )}
         </div>
     );
 }

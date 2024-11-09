@@ -2,18 +2,29 @@
     position: fixed;
     top: 6em;
     right: 1em;
-    padding: 1em;
-    border: 1px solid #333;
-    border-radius: 10px;
-    background-color: #f0f8ff;
-}
-
-.login-box-input-row {
-    margin: 0.5em 0;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background-color: var(--card-bg-light);
+    min-width: 320px;
 }
 
 @media (prefers-color-scheme: dark) {
     .login-box {
-        background-color: #333;
+        background-color: var(--card-bg-dark);
     }
+}
+
+
+.login-box-input-row, .login-box-title, .login-box-message-row {
+    margin: 0.5em 0;
+    padding: 0 1em;
+}
+
+.login-box-message-row {
+    color: var(--message-color);
+}
+
+.login-box-type-select-row {
+    margin: 0;
+    margin-bottom: 1em;
 }
